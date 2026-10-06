@@ -177,3 +177,17 @@ int main()
 
     return 0;
 }
+
+-----------------------------------------------------------
+Execution
+vinit@LAPTOP-D303T0UQ:/mnt/d/PCDLAB$ flex exp5.l
+vinit@LAPTOP-D303T0UQ:/mnt/d/PCDLAB$ gcc lex.yy.c -o exp5
+vinit@LAPTOP-D303T0UQ:/mnt/d/PCDLAB$ ./exp5
+Enter an arithmetic expression:
+10+5*2
+Result = 20
+(10+5)*2
+Result = 30
+^C
+vinit@LAPTOP-D303T0UQ:/mnt/d/PCDLAB$ 
+
