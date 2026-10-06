@@ -61,3 +61,13 @@ int yywrap()
 {
     return 1;
 }
+-------------------------------------------------
+vinit@LAPTOP-D303T0UQ:/mnt/d/PCDLAB$ bison -d exp8.y
+vinit@LAPTOP-D303T0UQ:/mnt/d/PCDLAB$ flex exp8.l
+vinit@LAPTOP-D303T0UQ:/mnt/d/PCDLAB$ gcc exp8.tab.c lex.yy.c -o exp8 -lfl
+vinit@LAPTOP-D303T0UQ:/mnt/d/PCDLAB$ ./exp8
+Enter expression: 10+20
+Result = 30
+30+40
+Invalid expression
+vinit@LAPTOP-D303T0UQ:/mnt/d/PCDLAB$ 
