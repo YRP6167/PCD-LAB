@@ -1,0 +1,112 @@
+Aim: To study and implement machine independent code optimization
+
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+#define MAX 50
+
+typedef struct {
+    char code[100];
+    int leader;
+} Statement;
+
+Statement stmt[MAX];
+int n;
+
+int isJump(char *s) {
+    return (strstr(s, "goto") != NULL || strstr(s, "if") != NULL);
+}
+
+int getTarget(char *s) {
+    char *p = strstr(s, "goto");
+    int target;
+    if (p != NULL && sscanf(p + 4, "%d", &target) == 1) {
+        return target;
+    }
+    return -1;
+}
+
+void findLeaders() {
+    int target;
+    for (int i = 0; i < n; i++) stmt[i].leader = 0;
+
+    // Rule 1: First statement is a leader
+    stmt[0].leader = 1;
+
+    for (int i = 0; i < n; i++) {
+        if (isJump(stmt[i].code)) {
+            // Rule 3: Statement following a jump is a leader
+            if (i + 1 < n) stmt[i + 1].leader = 1;
+            
+            // Rule 2: Jump target is a leader
+            target = getTarget(stmt[i].code);
+            if (target >= 1 && target <= n) {
+                stmt[target - 1].leader = 1;
+            }
+        }
+    }
+}
+
+void printBasicBlocks() {
+    int block = 1;
+    printf("\n== BASIC BLOCKS ==\n");
+    for (int i = 0; i < n; i++) {
+        if (stmt[i].leader) {
+            printf("\nB%d:\n", block++);
+        }
+        printf(" %d: %s\n", i + 1, stmt[i].code);
+    }
+}
+
+int main() {
+    printf("Enter number of three-address statements: ");
+    if (scanf("%d", &n) != 1) return 0;
+    getchar(); // Clear newline character
+
+    printf("\nEnter the statements:\n");
+    for (int i = 0; i < n; i++) {
+        printf("%d: ", i + 1);
+        fgets(stmt[i].code, sizeof(stmt[i].code), stdin);
+        stmt[i].code[strcspn(stmt[i].code, "\n")] = '\0';
+    }
+
+    findLeaders();
+    printBasicBlocks();
+    printf("\nData-flow analysis can now be performed on these basic blocks.\n");
+    return 0;
+}
+
+---------------------------------------
+
+Execution
+vinit@LAPTOP-D303T0UQ:/mnt/d/PCDLAB$ gcc exp10.c -o exp10
+vinit@LAPTOP-D303T0UQ:/mnt/d/PCDLAB$ ./exp10
+Enter number of three-address statements: 7
+
+Enter the statements:
+1: a=10
+2: b=20
+3: c=a+b
+4: if c<50 goto 6
+5: c=c+1
+6: d=c*2
+7: print d
+
+== BASIC BLOCKS ==
+
+B1:
+ 1: a=10
+ 2: b=20
+ 3: c=a+b
+ 4: if c<50 goto 6
+
+B2:
+ 5: c=c+1
+
+B3:
+ 6: d=c*2
+ 7: print d
+
+Data-flow analysis can now be performed on these basic blocks.
+vinit@LAPTOP-D303T0UQ:/mnt/d/PCDLAB$ 
