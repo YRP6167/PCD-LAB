@@ -97,4 +97,8 @@ int main(void) {
     return 0;
 }
 
+vinit@LAPTOP-D303T0UQ:/mnt/d/PCDLAB$ bison -d exp7.y
+vinit@LAPTOP-D303T0UQ:/mnt/d/PCDLAB$ flex exp7.l
+vinit@LAPTOP-D303T0UQ:/mnt/d/PCDLAB$ gcc exp7.tab.c lex.yy.c -o exp7 -lfl
+vinit@LAPTOP-D303T0UQ:/mnt/d/PCDLAB$ ./exp7
 
