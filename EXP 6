@@ -1,6 +1,6 @@
 Aim: to implement a type checking mechanism using lex and yacc for identifying and ...
 -------------------------------------------
-cat << 'EOF' > exp6.l
+exp6.l
 %{
 #include "exp6.tab.h"
 #include <stdlib.h>
@@ -20,11 +20,10 @@ int yywrap()
 {
     return 1;
 }
-EOF
 
 -------------------------------------------
 
-cat << 'EOF' > exp6.y
+exp6.y
 %{
 #include <stdio.h>
 int yylex(void);
@@ -72,7 +71,6 @@ int main()
     yyparse();
     return 0;
 }
-EOF
 
 -------------------------------------------
 
