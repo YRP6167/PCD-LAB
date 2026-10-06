@@ -1,5 +1,5 @@
 Aim: To design and implement a lexical analyzer using LEX (Flex) for recognizing keywords, identifiers, and integer constants.
-VSCODE + Ubuntu(Powershell)
+VSCODE + Ubuntu(Powershell)-- wsl -d ubuntu
 for command sachin bhopi github
 
 exp3.l(code)
