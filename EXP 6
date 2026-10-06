@@ -1,0 +1,85 @@
+Aim: to implement a type checking mechanism using lex and yacc for identifying and ...
+
+cat << 'EOF' > exp6.l
+%{
+#include "exp6.tab.h"
+#include <stdlib.h>
+%}
+
+%%
+
+[0-9]+\.[0-9]+   { return FLOAT; }
+[0-9]+           { yylval = atoi(yytext); return INTEGER; }
+[a-zA-Z]+        { return CHAR; }
+[\n]             { return EOL; }
+.                { return yytext[0]; }
+
+%%
+
+int yywrap()
+{
+    return 1;
+}
+EOF
+
+cat << 'EOF' > exp6.y
+%{
+#include <stdio.h>
+int yylex(void);
+void yyerror(const char *s);
+%}
+
+%token INTEGER FLOAT CHAR EOL
+
+%%
+
+statement_list:
+    /* empty */
+    | statement_list stmt
+    ;
+
+stmt:
+    expression EOL
+        {
+            if ($1 == INTEGER)
+                printf("Type: INTEGER\n");
+            else if ($1 == FLOAT)
+                printf("Type: FLOAT\n");
+            else if ($1 == CHAR)
+                printf("Type: CHAR/STRING\n");
+            else
+                printf("Invalid type\n");
+        }
+    ;
+
+expression:
+    INTEGER       { $$ = INTEGER; }
+    | FLOAT       { $$ = FLOAT; }
+    | CHAR        { $$ = CHAR; }
+    ;
+
+%%
+
+void yyerror(const char *s)
+{
+    printf("Invalid type or Parse error\n");
+}
+
+int main()
+{
+    yyparse();
+    return 0;
+}
+EOF
+
+
+vinit@LAPTOP-D303T0UQ:/mnt/d/PCDLAB$ bison -d exp6.y
+vinit@LAPTOP-D303T0UQ:/mnt/d/PCDLAB$ flex exp6.l
+vinit@LAPTOP-D303T0UQ:/mnt/d/PCDLAB$ gcc exp6.tab.c lex.yy.c -o exp6 -lfl
+vinit@LAPTOP-D303T0UQ:/mnt/d/PCDLAB$ ./exp6
+123
+Type: INTEGER
+123.897
+Type: FLOAT
+df24
+Invalid type or Parse error
