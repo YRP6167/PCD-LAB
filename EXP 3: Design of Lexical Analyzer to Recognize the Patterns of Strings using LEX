@@ -23,6 +23,7 @@ int|float|char {
 }
 
 [ \t\n]+ {
+    /* ignore whitespace */
 }
 
 . {
@@ -40,3 +41,21 @@ int main() {
 int yywrap() {
     return 1;
 }
+------------------------------------------
+Execution
+vinit@LAPTOP-D303T0UQ:/mnt/d/PCDLAB$ flex exp3.l
+vinit@LAPTOP-D303T0UQ:/mnt/d/PCDLAB$ gcc lex.yy.c -o exp3
+vinit@LAPTOP-D303T0UQ:/mnt/d/PCDLAB$ ./exp3
+Enter Source Code:
+
+int total = 100;
+Keyword : int
+Identifier : total
+Unknown Token : =
+Integer : 100
+Unknown Token : ;
+char grade;
+Keyword : char
+Identifier : grade
+Unknown Token : ;
+
