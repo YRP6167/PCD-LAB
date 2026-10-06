@@ -1,0 +1,161 @@
+Aim: Code optimization techniques
+
+vscode c compiler
+
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+#include <stdlib.h>
+
+struct Instruction {
+    char left;
+    char right[20];
+};
+
+void constantFolding(char *expr) {
+    int a, b;
+    char op;
+    if (sscanf(expr, "%d%c%d", &a, &op, &b) == 3) {
+        int res = (op == '+') ? a + b : 
+                  (op == '-') ? a - b : 
+                  (op == '*') ? a * b : 
+                  (op == '/') ? a / b : 0;
+        sprintf(expr, "%d", res);
+        printf("[Constant Folding Applied] Computed constant result.\n");
+    }
+}
+
+void strengthReduction(char *expr) {
+    char var[10];
+    int num;
+    if (sscanf(expr, "%[a-zA-Z]*%d", var, &num) == 2) {
+        if (num == 2) {
+            sprintf(expr, "%s<<1", var);
+            printf("[Strength Reduction Applied] Replaced multiplication by 2 with bitwise left shift.\n");
+        } else if (num == 0) {
+            strcpy(expr, "0");
+            printf("[Strength Reduction Applied] Replaced multiplication by 0 with 0.\n");
+        }
+    }
+}
+
+void algebraicTransformation(char *expr) {
+    if (strcmp(expr, "x+0") == 0 || strcmp(expr, "0+x") == 0) {
+        strcpy(expr, "x");
+        printf("[Algebraic Transformation Applied] Removed identity addition (+0).\n");
+    } else if (strcmp(expr, "x*1") == 0 || strcmp(expr, "1*x") == 0) {
+        strcpy(expr, "x");
+        printf("[Algebraic Transformation Applied] Removed identity multiplication (*1).\n");
+    }
+}
+
+int main() {
+    int n;
+    struct Instruction code[10];
+
+    printf("--- CODE OPTIMIZATION LABORATORY ---\n\n");
+    printf("Enter number of intermediate instructions: ");
+    if (scanf("%d", &n) != 1) return 0;
+
+    for (int i = 0; i < n; i++) {
+        printf("\nInstruction %d:\n", i + 1);
+        printf("Left operand (Variable): ");
+        scanf(" %c", &code[i].left);
+        printf("Right expression (e.g., 3+5, x*2, x+0): ");
+        scanf("%s", code[i].right);
+    }
+
+    printf("\n--- Original Intermediate Code ---\n");
+    for (int i = 0; i < n; i++) {
+        printf("%c = %s\n", code[i].left, code[i].right);
+    }
+
+    printf("\n--- Applying Optimization Techniques ---\n");
+    for (int i = 0; i < n; i++) {
+        printf("\nOptimizing Statement %d: %c = %s\n", i + 1, code[i].left, code[i].right);
+        constantFolding(code[i].right);
+        strengthReduction(code[i].right);
+        algebraicTransformation(code[i].right);
+    }
+
+    printf("\n=== FINAL OPTIMIZED CODE ===\n");
+    for (int i = 0; i < n; i++) {
+        printf("%c = %s\n", code[i].left, code[i].right);
+    }
+
+    printf("\n--- Loop Optimization Concept (Factorial Execution) ---\n");
+    int num = 5, k = 1;
+    long long fact_for = 1, fact_dowhile = 1;
+
+    for (int j = 1; j <= num; j++) {
+        fact_for *= j;
+    }
+
+    do {
+        fact_dowhile *= k;
+        k++;
+    } while (k <= num);
+
+    printf("Factorial of %d using 'for' loop: %lld\n", num, fact_for);
+    printf("Factorial of %d using 'do-while' loop: %lld\n", num, fact_dowhile);
+    printf("Note: Do-While skips initial check overhead before entering body.\n");
+
+    return 0;
+}
+
+-----------------------------------
+Execution
+
+vinit@LAPTOP-D303T0UQ:/mnt/d/PCDLAB$ gcc exp9.c -o exp9
+vinit@LAPTOP-D303T0UQ:/mnt/d/PCDLAB$ ./exp9
+--- CODE OPTIMIZATION LABORATORY ---
+
+Enter number of intermediate instructions: 4
+
+Instruction 1:
+Left operand (Variable): A
+Right expression (e.g., 3+5, x*2, x+0): 4+6
+
+Instruction 2:
+Left operand (Variable): B
+Right expression (e.g., 3+5, x*2, x+0): x*2
+
+Instruction 3:
+Left operand (Variable): C
+Right expression (e.g., 3+5, x*2, x+0): x+0
+
+Instruction 4:
+Left operand (Variable): D
+Right expression (e.g., 3+5, x*2, x+0): 3+5
+
+--- Original Intermediate Code ---
+A = 4+6
+B = x*2
+C = x+0
+D = 3+5
+
+--- Applying Optimization Techniques ---
+
+Optimizing Statement 1: A = 4+6
+[Constant Folding Applied] Computed constant result.
+
+Optimizing Statement 2: B = x*2
+[Strength Reduction Applied] Replaced multiplication by 2 with bitwise left shift.
+
+Optimizing Statement 3: C = x+0
+[Algebraic Transformation Applied] Removed identity addition (+0).
+
+Optimizing Statement 4: D = 3+5
+[Constant Folding Applied] Computed constant result.
+
+=== FINAL OPTIMIZED CODE ===
+A = 10
+B = x<<1
+C = x
+D = 8
+
+--- Loop Optimization Concept (Factorial Execution) ---
+Factorial of 5 using 'for' loop: 120
+Factorial of 5 using 'do-while' loop: 120
+Note: Do-While skips initial check overhead before entering body.
+vinit@LAPTOP-D303T0UQ:/mnt/d/PCDLAB$ 
