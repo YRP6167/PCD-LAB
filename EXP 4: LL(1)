@@ -1,0 +1,94 @@
+Aim: To design and implement LL(1) parser for arithmetic expression
+vscode file
+
+#include <stdio.h>
+#include <stdlib.h>
+
+char input[100];
+int pos = 0;
+
+void E();
+void EP();
+void T();
+void TP();
+void F();
+
+void error() {
+    printf("\nString Rejected\n");
+    exit(0);
+}
+
+void match(char c) {
+    if (input[pos] == c)
+        pos++;
+    else
+        error();
+}
+
+void E() {
+    T();
+    EP();
+}
+
+void EP() {
+    if (input[pos] == '+') {
+        match('+');
+        T();
+        EP();
+    }
+}
+
+void T() {
+    F();
+    TP();
+}
+
+void TP() {
+    if (input[pos] == '*') {
+        match('*');
+        F();
+        TP();
+    }
+}
+
+void F() {
+    if (input[pos] == 'i') {
+        match('i');
+    } else if (input[pos] == '(') {
+        match('(');
+        E();
+        match(')');
+    } else {
+        error();
+    }
+}
+
+int main() {
+    printf("Enter expression: ");
+    scanf("%s", input);
+
+    E();
+
+    if (input[pos] == '\0')
+        printf("\nString Accepted\n");
+    else
+        printf("\nString Rejected\n");
+
+    return 0;
+}
+---------------------------------
+Execution Command
+Active code page: 65001
+
+D:\PCDLAB>wsl -d ubuntu
+vinit@LAPTOP-D303T0UQ:/mnt/d/PCDLAB$ gcc experiment4.c -o experiment4
+/usr/bin/x86_64-linux-gnu-ld.bfd: /usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/Scrt1.o: in function `_start':
+(.text+0x1b): undefined reference to `main'
+collect2: error: ld returned 1 exit status
+vinit@LAPTOP-D303T0UQ:/mnt/d/PCDLAB$ ^C
+vinit@LAPTOP-D303T0UQ:/mnt/d/PCDLAB$ gcc experiment4.c -o experiment4
+vinit@LAPTOP-D303T0UQ:/mnt/d/PCDLAB$ ./experiment4
+Enter expression: i+i*i
+
+String Accepted
+vinit@LAPTOP-D303T0UQ:/mnt/d/PCDLAB$ 
