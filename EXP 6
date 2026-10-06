@@ -1,5 +1,5 @@
 Aim: to implement a type checking mechanism using lex and yacc for identifying and ...
-
+-------------------------------------------
 cat << 'EOF' > exp6.l
 %{
 #include "exp6.tab.h"
@@ -21,6 +21,8 @@ int yywrap()
     return 1;
 }
 EOF
+
+-------------------------------------------
 
 cat << 'EOF' > exp6.y
 %{
@@ -72,6 +74,7 @@ int main()
 }
 EOF
 
+-------------------------------------------
 
 vinit@LAPTOP-D303T0UQ:/mnt/d/PCDLAB$ bison -d exp6.y
 vinit@LAPTOP-D303T0UQ:/mnt/d/PCDLAB$ flex exp6.l
